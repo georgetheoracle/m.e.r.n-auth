@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function Header() {
+export default function Header() {
   return (
     <div className='bg-slate-900 text-white'>
         <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
@@ -19,5 +19,3 @@ function Header() {
     </div>
   )
 }
-
-export default Header
