@@ -1,11 +1,13 @@
 import React , {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { signInFailure, signInSuccess, signInStart } from '../Redux/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function SignIn() {
     const [formData, setFormData] = useState({});
-    const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const {loading, error} = useSelector((state) => state.user);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleChange = (event) =>{
         setFormData({...formData, [event.target.id]: event.target.value})
@@ -14,8 +16,7 @@ export default function SignIn() {
     const handleSubmit = async(event) =>{
         event.preventDefault();
     try {
-        setLoading(true);
-        setError(false);
+        dispatch(signInStart());
         const res = await fetch ('/api/auth/signin', {
             method: 'POST',
             headers: {
@@ -25,15 +26,14 @@ export default function SignIn() {
         });
         const data = await res.json();
         console.log(data);
-        setLoading(false);
         if (data.success === false){
-            setError(true);
+            dispatch(signInFailure(data));
             return;
         }
+        dispatch(signInSuccess(data));
         navigate('/')
     } catch (error) {
-         setLoading(false);
-         setError(true);
+        dispatch(signInFailure(error));
     }
     };
 
@@ -50,10 +50,10 @@ export default function SignIn() {
         <div className='flex gap-3 mt-5'>
             <p>Don&apos;t Have an account?</p>
             <Link to='/sign-up'> 
-            <span className='text-blue-500'>Sign In</span>
+            <span className='text-blue-500'>Sign Up</span>
             </Link>
         </div>
-        <p className='text-red-500 mt-5'>{error && 'Invalid credentials, Use another Input'}</p>
+        <p className='text-red-500 mt-5'> { error? error || 'Invalid credentials' : ''}</p>
     </div>
     </>
   )
