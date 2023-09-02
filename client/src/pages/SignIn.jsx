@@ -1,6 +1,6 @@
 import React , {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInFailure, signInSuccess, signInStart } from '../Redux/user/userSlice';
+import { signInFailure, signInSuccess, signInStart } from '../Redux/user/userSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function SignIn() {
@@ -13,8 +13,8 @@ export default function SignIn() {
         setFormData({...formData, [event.target.id]: event.target.value})
     };
 
-    const handleSubmit = async(event) =>{
-        event.preventDefault();
+    const handleSubmit = async(e) => {
+        e.preventDefault();
     try {
         dispatch(signInStart());
         const res = await fetch ('/api/auth/signin', {
